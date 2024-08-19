@@ -10,7 +10,7 @@ global_asm!(include_str!("boot.s"), options(att_syntax));
 pub extern "C" fn kernel_main() -> ! {
     let mut writer = TerminalWriter::new();
 
-    writer.write(b"Hello rust kernel!");
+    writer.write(b"Hello rust kernel!\nNext line!");
 
     loop {}
 }
@@ -88,6 +88,12 @@ impl TerminalWriter {
     }
 
     fn put_char(&mut self, c: u8) {
+        if c == b'\n' {
+            self.column = 0;
+            self.row += 1;
+            return;
+        }
+
         self.put_entry_at(c, self.color, self.column, self.row);
         self.column += 1;
         if self.column == VGA_WIDTH {
