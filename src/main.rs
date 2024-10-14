@@ -14,10 +14,12 @@ global_asm!(include_str!("boot.s"), options(att_syntax));
 pub extern "C" fn kernel_main() -> ! {
     println!("Hello World{}", "!");
     println!("Hello World{}", "! again!");
+    panic!("Some panic message");
     loop {}
 }
 
 #[panic_handler]
-fn panic_handler(_info: &PanicInfo) -> ! {
-    loop {} // FIXME - Don't hang
+fn panic_handler(info: &PanicInfo) -> ! {
+    println!("{}", info);
+    loop {}
 }
